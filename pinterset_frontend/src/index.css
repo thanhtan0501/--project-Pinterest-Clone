@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Lato', sans-serif;
+  user-select: none;
+  scroll-behavior: smooth;
+
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Loader */
+#loader {
+  width: 40px;
+  height: 40px;
+  background: #5f5f5f;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+#loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: 5px;
+  height: 5px;
+  color: #fff;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 11px 0px, 11px 11px, 0px 11px;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: #fafafa;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #bfbfbf;
+  border-radius: 100px;
+
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #F5F5F5;
+}
+
+/* Shimmer Animation */
+.shimmer::before {
+  content: '';
+  width: calc(100% - 24px);
+  height: 3px;
+  background-color: #000;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: all .2s linear;
+  border-radius: 9999px;
+  margin: 0 12px;
+}
+
+.shimmerActive:before {
+  transform: translateX(0);
+  opacity: 1;
+}
