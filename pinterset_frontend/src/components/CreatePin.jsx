@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DeleteIcon, MenuIcon, UploadIcon, WarningIcon } from "../assets/icons";
 
@@ -19,8 +19,20 @@ const CreatePin = ({ user }) => {
     const [imageAsset, setImageAsset] = useState();
     const [wrongImageType, setWrongImageType] = useState(false);
     const [savingPost, setSavingPost] = useState(false);
-
+    const textTitleRef = useRef();
+    const textAboutRef = useRef();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        textTitleRef.current.style.height = "inherit";
+        const scrollHeight = textTitleRef.current.scrollHeight;
+        textTitleRef.current.style.height = scrollHeight + "px";
+    }, [title]);
+    useEffect(() => {
+        textAboutRef.current.style.height = "inherit";
+        const scrollHeight = textAboutRef.current.scrollHeight;
+        textAboutRef.current.style.height = scrollHeight + "px";
+    }, [about]);
     const upLoadImage = (e) => {
         const { type, name } = e.target.files[0];
         if (
@@ -89,7 +101,7 @@ const CreatePin = ({ user }) => {
         <>
             <div className="py-[44px] bg-[#e9e9e9] h-full">
                 <div className=" flex flex-col justify-start items-center lg:h-4/5 px-2 md:pr-8 md:pl-4 h-[100vh]">
-                    <div className="flex flex-col gap-5 justify-center items-center bg-white lg:p-20 p-10 rounded-2xl max-w-[880px] w-full relative">
+                    <div className="flex flex-col gap-5 justify-center items-center bg-white p-10 rounded-2xl max-w-[880px] w-full relative">
                         <div className="flex justify-between items-center w-full ">
                             <button
                                 // ref={menuRef}
@@ -233,22 +245,21 @@ const CreatePin = ({ user }) => {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex flex-1 flex-col gap-4 md:pl-5 mt-8 w-full">
+                            <div className="flex flex-1 flex-col gap-6 md:pl-5 mt-8 w-full">
                                 <div className="flex flex-1 flex-col gap-4">
-                                    <div className="">
-                                        <input
+                                    <div className="w-full ">
+                                        <textarea
+                                            ref={textTitleRef}
                                             type="text"
-                                            value={title}
                                             onChange={(e) =>
                                                 setTitle(e.target.value)
                                             }
                                             placeholder="Add your title"
-                                            className={`outline-none text-2xl sm:text-4xl w-full font-bold p-2 pt-[6px] pl-0 focus-within:border-b-[3px] focus-within:border-[#0074E8] transition-all duration-300 ease-in-out ${
+                                            className={`outline-none p-2 pt-[6px] pl-0 text-2xl sm:text-4xl w-full font-bold focus-within:border-b-[3px] focus-within:border-[#0074E8] transition-all duration-300 ease-in-out overflow-hidden resize-none ${
                                                 fieldsTitle
                                                     ? "border-[#CC0000] border-b-[3px] placeholder:text-red-400"
                                                     : "border-b-[3px] border-gray-200 text-[#111]"
                                             } `}
-                                            rows={1}
                                             onFocus={() => {
                                                 setFocusTitle(true);
                                                 if (fieldsTitle)
@@ -259,10 +270,13 @@ const CreatePin = ({ user }) => {
                                                 if (fields && !e.target.value)
                                                     setFieldsTitle(true);
                                             }}
-                                        />
-                                        <div className="text-[#5f5f5f] text-[11px] mt-1 h-[15px]">
+                                            rows={1}
+                                        >
+                                            {title}
+                                        </textarea>
+                                        <div className="text-[#5f5f5f] text-[11px] mt-1 h-[15px] ">
                                             {focusTitle && (
-                                                <div>
+                                                <div className="transition-all duration-300 ease-in-out text-left">
                                                     <p>
                                                         Your first 40 characters
                                                         are what usually show up
@@ -284,21 +298,26 @@ const CreatePin = ({ user }) => {
                                             </p>
                                         </div>
                                     )}
-                                    <div className="">
-                                        <input
-                                            type="text"
-                                            value={about}
+                                    <div
+                                        className="w-full flex flex-col items-start justify-between
+                                    "
+                                    >
+                                        <textarea
+                                            ref={textAboutRef}
                                             onChange={(e) =>
                                                 setAbout(e.target.value)
                                             }
                                             placeholder="Tell everyone what your Pin is about"
-                                            className=" outline-none text-[#9197a3] text-base w-full font-normal border-b-[3px] border-gray-200 p-2 pt-[6px] pb-5 pl-5 focus-within:border-[#0074E8] focus-within:border-b-[3px] transition-all duration-300 ease-in-out"
+                                            className=" outline-none placeholder:text-[#9197a3] text-[#333] text-base w-full font-normal border-b-[3px] border-gray-200 p-2 pt-[6px] pb-5 pl-5 focus-within:border-[#0074E8] focus-within:border-b-[3px] transition-all duration-300 ease-in-out overflow-hidden resize-none"
                                             onFocus={() => setFocusAbout(true)}
                                             onBlur={() => setFocusAbout(false)}
-                                        />
+                                            rows={1}
+                                        >
+                                            {about}
+                                        </textarea>
                                         <div className="text-[#5f5f5f] text-[11px] mt-1 h-[15px]">
                                             {focusAbout && (
-                                                <div>
+                                                <div className="transition-all duration-300 ease-in-out text-left">
                                                     <p>
                                                         People will usually see
                                                         the first 50 characters
