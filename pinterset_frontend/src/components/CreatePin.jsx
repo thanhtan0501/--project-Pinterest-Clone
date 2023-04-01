@@ -337,7 +337,7 @@ const CreatePin = ({ user }) => {
                                             setDestination(e.target.value)
                                         }
                                         placeholder="Add a destination link"
-                                        className=" outline-none text-[#9197a3] text-base w-full font-normal border-b-[3px] border-gray-200 p-2 pt-[6px] pl-0 focus-within:border-[#0074E8] focus-within:border-b-[3px] transition-all duration-300 ease-in-out"
+                                        className=" outline-none placeholder:text-[#9197a3] text-[#333] text-base w-full font-normal border-b-[3px] border-gray-200 p-2 pt-[6px] pl-0 focus-within:border-[#0074E8] focus-within:border-b-[3px] transition-all duration-300 ease-in-out"
                                     />
                                 </div>
                             </div>
