@@ -205,7 +205,7 @@ const Pin = ({ pin }) => {
                 )}
             </div>
             {pin?.postedBy && (
-                <div className="pt-2 px-[6px] pb-4 flex flex-col gap-1">
+                <div className="pt-2 px-[6px] pb-2 flex flex-col gap-1">
                     {pin?.title && (
                         <p
                             onClick={() => navigate(`/pin-detail/${pin?._id}`)}
