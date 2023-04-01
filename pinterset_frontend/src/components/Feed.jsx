@@ -29,7 +29,8 @@ const Feed = () => {
     }, [categoryId]);
 
     if (loading) return <Spinner />;
-    if (!pins?.length) return <h2>No Pins available</h2>;
+    if (!pins?.length)
+        return <h2 className="mt-10 text-center text-xl">No Pins available</h2>;
     return (
         <div className="h-full pt-4">
             {pins && <MasonryLayout pins={pins} />}

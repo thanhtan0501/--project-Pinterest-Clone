@@ -8,7 +8,6 @@ import Spinner from "./Spinner";
 const Search = ({ searchTerm }) => {
     const [pins, setPins] = useState([]);
     const [loading, setLoading] = useState(false);
-    console.log(pins?.length);
     useEffect(() => {
         if (searchTerm) {
             setLoading(true);

@@ -12,8 +12,9 @@ const CreatePin = ({ user }) => {
     const [about, setAbout] = useState("");
     const [focusAbout, setFocusAbout] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [destination, setDestination] = useState();
+    const [destination, setDestination] = useState("");
     const [fields, setFields] = useState();
+    const [fieldsTitle, setFieldsTitle] = useState(false);
     const [category, setCategory] = useState();
     const [imageAsset, setImageAsset] = useState();
     const [wrongImageType, setWrongImageType] = useState(false);
@@ -50,7 +51,7 @@ const CreatePin = ({ user }) => {
         }
     };
     const savePin = () => {
-        if (imageAsset?._id) {
+        if (imageAsset?._id && title) {
             setSavingPost(true);
             setLoading(true);
             const doc = {
@@ -78,6 +79,7 @@ const CreatePin = ({ user }) => {
             });
         } else {
             setFields(true);
+            if (!title) setFieldsTitle(true);
             // setTimeout(() => {
             //     setFields(false);
             // }, 2000);
@@ -139,7 +141,7 @@ const CreatePin = ({ user }) => {
                                 ${
                                     fields
                                         ? "bg-[#FFE0E0] border-[#CC0000] border-2"
-                                        : "bg-secondaryColor border-transparent"
+                                        : "bg-secondaryColor border-transparent border-2"
                                 }  
                                 ${imageAsset ? "px-0 py-5" : "p-3"}`}
                             >
@@ -241,19 +243,23 @@ const CreatePin = ({ user }) => {
                                                 setTitle(e.target.value)
                                             }
                                             placeholder="Add your title"
-                                            className=" outline-none text-2xl sm:text-4xl w-full font-bold border-b-[3px] border-gray-200 p-2 pt-[6px] pl-0 focus-within:border-[#0074E8] focus-within:border-b-[3px] transition-all duration-300 ease-in-out"
+                                            className={`outline-none text-2xl sm:text-4xl w-full font-bold p-2 pt-[6px] pl-0 focus-within:border-b-[3px] focus-within:border-[#0074E8] transition-all duration-300 ease-in-out ${
+                                                fieldsTitle
+                                                    ? "border-[#CC0000] border-b-[3px] placeholder:text-red-400"
+                                                    : "border-b-[3px] border-gray-200 text-[#111]"
+                                            } `}
                                             rows={1}
-                                            onFocus={() => setFocusTitle(true)}
-                                            onBlur={() => setFocusTitle(false)}
+                                            onFocus={() => {
+                                                setFocusTitle(true);
+                                                if (fieldsTitle)
+                                                    setFieldsTitle(false);
+                                            }}
+                                            onBlur={(e) => {
+                                                setFocusTitle(false);
+                                                if (fields && !e.target.value)
+                                                    setFieldsTitle(true);
+                                            }}
                                         />
-                                        {/* <textarea
-                                        type="text"
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        placeholder="Add your title"
-                                        className=" outline-none text-2xl sm:text-3xl font-bold border-b-2 border-gray-200 p-2"
-                                        rows={1}
-                                        ></textarea> */}
                                         <div className="text-[#5f5f5f] text-[11px] mt-1 h-[15px]">
                                             {focusTitle && (
                                                 <div>
@@ -306,7 +312,7 @@ const CreatePin = ({ user }) => {
                                 </div>
                                 <div className="">
                                     <input
-                                        type="text"
+                                        type="url"
                                         value={destination}
                                         onChange={(e) =>
                                             setDestination(e.target.value)
@@ -321,7 +327,7 @@ const CreatePin = ({ user }) => {
                 </div>
             </div>
             {savingPost && (
-                <div className=" bg-white opacity-80 w-full h-full absolute inset-0">
+                <div className=" bg-white opacity-80 w-full h-full absolute z-[22] inset-0">
                     {loading && <Spinner />}
                 </div>
             )}

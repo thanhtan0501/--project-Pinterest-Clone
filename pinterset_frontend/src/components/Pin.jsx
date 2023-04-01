@@ -4,12 +4,15 @@ import { client, urlFor } from "../client";
 import { v4 as uuidv4 } from "uuid";
 
 import { MdOutlineFileDownload } from "react-icons/md";
-import { ArrowUpRightIcon, MenuIcon } from "../assets/icons";
+import { ArrowUpRightIcon, EditIcon, MenuIcon } from "../assets/icons";
 import { fetchUser } from "../utils/fetchUser";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { domains } from "../utils/data";
-
-const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
+import EditPin from "./EditPin";
+import { useRecoilState } from "recoil";
+import { modalEditState, pinState } from "../atoms";
+// pin: { image, postedBy, title, _id, destination, save, about, category },
+const Pin = ({ pin }) => {
     const [postHovered, setPostHovered] = useState(false);
     const [postOptions, setPostOptions] = useState(false);
     const [savingPost, setSavingPost] = useState(false);
@@ -17,6 +20,8 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
     const user = fetchUser();
     const menuRef = useRef();
     const optionRef = useRef();
+    const [isOpenEdit, setIsOpenEdit] = useRecoilState(modalEditState);
+    const [pinData, setPinData] = useRecoilState(pinState);
 
     useEffect(() => {
         let handler = (e) => {
@@ -32,11 +37,9 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
             document.removeEventListener("mousedown", handler);
         };
     });
-
-    const alreadySaved = !!save?.filter(
+    const alreadySaved = !!pin.save?.filter(
         (item) => item?.postedBy?._id === user?.sub
     )?.length;
-
     // ID user  |   Array of users like post    |   -(filter)->  |  length  |   !     -> !        | alreadySaved
     // 1        |   [2, 3, 1]                   |    [1]         |  1       |   false -> true     | true
     // 4        |   [2, 3, 1]                   |    []          |  0       |   true  -> false    | false
@@ -73,11 +76,11 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
         let num = 0;
         let lengthDomain = 0;
         domains.some((domain) => {
-            num = destination.lastIndexOf(domain);
+            num = pin?.destination.lastIndexOf(domain);
             lengthDomain = domain.length;
             return num !== -1 ? true : false;
         });
-        return num > 0 ? num + lengthDomain : destination.length;
+        return num > 0 ? num + lengthDomain : pin?.destination.length;
     };
     return (
         <div className="mx-2 my-4 relative ">
@@ -87,12 +90,12 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                 onMouseLeave={() => {
                     if (!postOptions) setPostHovered(false);
                 }}
-                onClick={() => navigate(`/pin-detail/${_id}`)}
+                onClick={() => navigate(`/pin-detail/${pin?._id}`)}
             >
                 <img
                     className="w-full rounded-[16px]"
                     alt="user-post"
-                    src={urlFor(image).width(2500).url()}
+                    src={urlFor(pin.image).width(2500).url()}
                 />
                 {postHovered && (
                     <div
@@ -117,7 +120,7 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        savePin(_id);
+                                        savePin(pin?._id);
                                     }}
                                     type="button"
                                     className="bg-[#e60023]  hover:bg-[#ad081b] text-white font-bold px-4 py-3 text-base  rounded-3xl hover:shadow-md outline-none"
@@ -130,9 +133,9 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
 
                         <div className="flex items-center justify-between gap-2 w-full">
                             <div className=" flex gap-2 grow max-w-[65%]">
-                                {destination && (
+                                {pin?.destination && (
                                     <a
-                                        href={destination}
+                                        href={pin?.destination}
                                         className="bg-white flex items-center gap-2 text-[#111] text-[14px] font-semibold w-full h-8 rounded-full opacity-80 hover:opacity-90 hover:shadow-md outline-none py-2 px-3 overflow-hidden"
                                         target="_blank"
                                         rel="noreferrer"
@@ -141,16 +144,16 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                                         }}
                                     >
                                         <ArrowUpRightIcon className="w-[9px] h-[9px]" />
-                                        {destination && (
+                                        {pin?.destination && (
                                             <p className="overflow-hidden text-ellipsis	whitespace-nowrap">
-                                                {destination?.includes(
+                                                {pin?.destination?.includes(
                                                     "https://"
                                                 )
-                                                    ? destination?.slice(
+                                                    ? pin?.destination?.slice(
                                                           8,
                                                           checkUrl()
                                                       )
-                                                    : destination?.slice(
+                                                    : pin?.destination?.slice(
                                                           0,
                                                           checkUrl()
                                                       )}
@@ -160,14 +163,31 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                                 )}
                             </div>
                             <div className=" flex gap-2 grow-0">
-                                <a
-                                    href={`${image?.asset?.url}?dl=`}
-                                    download
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
-                                >
-                                    <MdOutlineFileDownload fontSize={21} />
-                                </a>
+                                {pin.postedBy?._id === user?.sub ? (
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsOpenEdit(true);
+                                            setPinData(pin);
+                                        }}
+                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
+                                    >
+                                        <EditIcon />
+                                    </button>
+                                ) : (
+                                    <a
+                                        href={`${pin.image?.asset?.url}?dl=`}
+                                        download
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
+                                    >
+                                        <MdOutlineFileDownload
+                                            fontSize={21}
+                                            title="Download"
+                                        />
+                                    </a>
+                                )}
                                 <button
                                     ref={menuRef}
                                     type="button"
@@ -184,27 +204,27 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                     </div>
                 )}
             </div>
-            {postedBy && (
+            {pin?.postedBy && (
                 <div className="pt-2 px-[6px] pb-4 flex flex-col gap-1">
-                    {title && (
+                    {pin?.title && (
                         <p
-                            onClick={() => navigate(`/pin-detail/${_id}`)}
+                            onClick={() => navigate(`/pin-detail/${pin?._id}`)}
                             className="font-semibold capitalize text-[#111] text-[14px] overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer"
                         >
-                            {title}
+                            {pin.title}
                         </p>
                     )}
                     <Link
-                        to={`user-profile/${postedBy?._id}`}
+                        to={`user-profile/${pin?.postedBy?._id}`}
                         className="flex gap-2 items-center"
                     >
                         <img
                             className="w-8 h-8 rounded-full object-cover"
-                            src={postedBy?.image}
+                            src={pin.postedBy?.image}
                             alt="user-profile"
                         />
                         <p className="text-[#111] text-[14px] font-normal hover:underline max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap">
-                            {postedBy?.userName}
+                            {pin?.postedBy?.userName}
                         </p>
                     </Link>
                 </div>
@@ -214,8 +234,8 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                 <div
                     ref={optionRef}
                     className={`absolute min-h-[40px] min-w-[180px] max-w-[360px] max-h-[90vh] right-[-15px] shadow-[0px_0px_8px_rgba(0,0,0,0.1)] outline-none rounded-[16px] bg-white z-[60] ${
-                        postedBy?._id === user?.sub
-                            ? "bottom-[-145px]"
+                        pin?.postedBy?._id === user?.sub
+                            ? "bottom-[-108px]"
                             : "bottom-[-68px]"
                     }`}
                 >
@@ -242,23 +262,14 @@ const Pin = ({ pin: { image, postedBy, title, _id, destination, save } }) => {
                                 >
                                     Report Pin
                                 </div>
-                                {postedBy?._id === user?.sub && (
+                                {pin?.postedBy?._id === user?.sub && (
                                     <>
-                                        <div
-                                            className="p-2 rounded-[8px] m-0 text-[16px] font-semibold hover:bg-[#e9e9e9] transition-all "
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setPostOptions(!postOptions);
-                                            }}
-                                        >
-                                            Edit Pin
-                                        </div>
                                         <div
                                             className="p-2 rounded-[8px] m-0 text-[16px] text-red-600 font-semibold hover:bg-[#e9e9e9] transition-all flex items-center gap-1"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setPostOptions(!postOptions);
-                                                deletePin(_id);
+                                                deletePin(pin?._id);
                                             }}
                                         >
                                             <RiDeleteBinLine />

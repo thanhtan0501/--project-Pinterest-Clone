@@ -8,12 +8,15 @@ import { Login } from "../components";
 import { userQuery } from "../utils/data";
 import { client } from "../client";
 import { fetchUser } from "../utils/fetchUser";
-import { modalLoginState } from "../atoms";
+import { modalEditState, modalLoginState, pinState } from "../atoms";
+import EditPin from "../components/EditPin";
 
 const Home = () => {
     const [user, setUser] = useState(null);
     const scrollRef = useRef();
     const [isOpenLogin, setIsOpenLogin] = useRecoilState(modalLoginState);
+    const [isOpenEdit, setIsOpenEdit] = useRecoilState(modalEditState);
+    const [pin, setPin] = useRecoilState(pinState);
 
     const userInfo = fetchUser();
     useEffect(() => {
@@ -28,7 +31,6 @@ const Home = () => {
     useEffect(() => {
         scrollRef.current.scrollTo(0, 0);
     }, []);
-
     return (
         <div className="flex bg-gray-50 md:flex-row flex-col h-screen transaction-height duration-75 ease-out">
             <div
@@ -40,6 +42,7 @@ const Home = () => {
                 </Routes>
             </div>
             {isOpenLogin && <Login />}
+            {isOpenEdit && <EditPin pin={pin} />}
         </div>
     );
 };

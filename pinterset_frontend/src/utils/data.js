@@ -91,6 +91,8 @@ export const searchQuery = (categoryId) => {
             },
         },
         title,
+        about,
+        category,
     }`;
     return query;
 };
@@ -179,6 +181,9 @@ export const feedQuery = `*[_type == "pin"] | order(_createAt desc){
         },
     },
     title,
+    about,
+    category,
+
 }`;
 
 export const userCreatedPinsQuery = (userId) => {

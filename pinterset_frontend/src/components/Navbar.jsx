@@ -104,6 +104,7 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
                 {user ? (
                     <div className="flex items-center justify-center w-[48px] h-full rounded-full hover:bg-[#e9e9e9] transition-all duration-300 ease-in-out">
                         <NavLink
+                            title="Your Profile"
                             to={`user-profile/${user._id}`}
                             className={({ isActive }) =>
                                 isActive
@@ -138,7 +139,10 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
                             setOpen(!open);
                         }}
                     >
-                        <MdOutlineKeyboardArrowDown fontSize={25} />
+                        <MdOutlineKeyboardArrowDown
+                            fontSize={25}
+                            title="Account and more options"
+                        />
                     </div>
                     {open && (
                         <div className="absolute min-h-[40px] min-w-[300px] max-w-[90vw] max-h-[90vh] top-[60px] right-[5px] shadow-[0px_0px_8px_rgba(0,0,0,0.1)] outline-none rounded-[16px] bg-white z-[70]">

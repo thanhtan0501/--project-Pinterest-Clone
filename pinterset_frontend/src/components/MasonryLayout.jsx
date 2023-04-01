@@ -6,16 +6,15 @@ import Pin from "./Pin";
 const breakpointObj = {
     default: 4,
     2000: 5,
-    1200: 4,
-    1020: 3,
-    800: 2,
-    500: 1,
+    1400: 4,
+    1100: 3,
+    850: 2,
+    550: 1,
 };
-
 const MasonryLayout = ({ pins }) => {
     return (
         <Masonry
-            className="flex animate-slide-fwd px-6 md:px-20 "
+            className="flex animate-slide-fwd px-6 md:px-12 lg:px-16 xl:px-20 "
             breakpointCols={breakpointObj}
         >
             {pins.map((pin) => (

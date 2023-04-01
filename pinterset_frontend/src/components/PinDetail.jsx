@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { client, urlFor } from "../client";
 import { v4 as uuidv4 } from "uuid";
 
@@ -28,6 +28,7 @@ const PinDetail = ({ user }) => {
     const [postHovered, setPostHovered] = useState(false);
     const getSizeImage = useRef();
     const { pinId } = useParams();
+    const navigate = useNavigate();
     const [isOpenLogin, setIsOpenLogin] = useRecoilState(modalLoginState);
 
     const toggleReadMore = () => {
@@ -75,6 +76,12 @@ const PinDetail = ({ user }) => {
     const alreadySaved = !!pinDetail?.save?.filter(
         (item) => item?.postedBy?._id === user?.sub
     )?.length;
+    const deletePin = (id) => {
+        client.delete(id).then(() => {
+            navigate("/");
+            // window.location.reload();
+        });
+    };
     const savePin = (id) => {
         if (!alreadySaved) {
             setSavingPost(true);
@@ -201,13 +208,19 @@ const PinDetail = ({ user }) => {
                                     onClick={(e) => e.stopPropagation()}
                                     className="bg-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/10 text-[#111] text-xl hover:shadow-md outline-none transition-all duration-500 ease-in-out"
                                 >
-                                    <MdOutlineFileDownload fontSize={28} />
+                                    <MdOutlineFileDownload
+                                        fontSize={28}
+                                        title="Download"
+                                    />
                                 </a>
                                 {pinDetail?.postedBy?._id === user?._id && (
                                     <button
                                         type="button"
                                         className="bg-white hover:bg-black/10 w-12 h-12 rounded-full flex items-center justify-center text-[#111] text-xl hover:shadow-md outline-none transition-all duration-500 ease-in-out"
-                                        // onClick={() => setImageAsset(null)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deletePin(pinDetail?._id);
+                                        }}
                                     >
                                         <DeleteIcon className="w-5 h-5" />
                                     </button>

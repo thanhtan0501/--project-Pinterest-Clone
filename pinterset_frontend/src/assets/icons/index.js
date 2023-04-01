@@ -39,7 +39,7 @@ export const UploadIcon = ({ className }) => (
 );
 export const WarningIcon = ({ className }) => (
     <svg
-        class={className}
+        className={className}
         height="32"
         width="32"
         viewBox="0 0 24 24"
@@ -87,6 +87,7 @@ export const DeleteIcon = ({ className }) => (
         aria-label=""
         role="img"
     >
+        <title>Delete</title>
         <path d="M4.878 22.116A2 2 0 0 0 6.875 24h10.229a2 2 0 0 0 1.995-1.881L20 7H4l.88 15.116zM22 3.5A1.5 1.5 0 0 1 20.5 5h-17a1.5 1.5 0 0 1 0-3h6V1a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1h6A1.5 1.5 0 0 1 22 3.5z"></path>
     </svg>
 );
@@ -114,6 +115,8 @@ export const HeartIcon = ({ className }) => (
         fill="currentColor"
         role="img"
     >
+        <title>Like</title>
+
         <path d="M5.94 6.5c.92 0 1.83.37 2.49 1.02l1.48 1.44L12 11l2.09-2.04 1.48-1.44a3.6 3.6 0 0 1 2.49-1.02c.49 0 1.2.11 1.85.63a2.8 2.8 0 0 1 .23 4.23l-.07.07-.07.08c-.06.07-5.59 6.22-8 8.75-2.41-2.54-7.94-8.69-8-8.75l-.06-.08-.08-.07A2.83 2.83 0 0 1 3 9.21 2.91 2.91 0 0 1 5.94 6.5zm12.12-3a6.6 6.6 0 0 0-4.58 1.87L12 6.81l-1.48-1.44A6.6 6.6 0 0 0 5.94 3.5c-1.33 0-2.65.42-3.73 1.29a5.8 5.8 0 0 0-.44 8.72s6.29 7.01 8.48 9.26c.47.49 1.11.73 1.75.73.64 0 1.28-.24 1.75-.73 2.19-2.25 8.48-9.26 8.48-9.26a5.8 5.8 0 0 0-.44-8.72 5.91 5.91 0 0 0-3.73-1.29z"></path>
     </svg>
 );
@@ -140,6 +143,23 @@ export const PlusIcon = ({ className }) => (
         aria-label=""
         role="img"
     >
+        <title>Create</title>
+
         <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
+    </svg>
+);
+export const EditIcon = ({ className }) => (
+    <svg
+        className={className}
+        height="16"
+        width="16"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        aria-label=""
+        role="img"
+    >
+        <title>Edit Pin</title>
+
+        <path d="m13.386 6.018 4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596l-2.298 2.3-4.596-4.598 2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
     </svg>
 );
