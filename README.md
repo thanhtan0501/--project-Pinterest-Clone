@@ -1,5 +1,7 @@
 # Pinterest-Clone
 
+![Screenshot 2023-04-02 231343](https://user-images.githubusercontent.com/82827363/229365234-769f0605-2cb7-4a30-96c6-427cb8c8663c.png)
+
 ### Materials:
 #### Google Cloud: https://console.cloud.google.com/apis/credentials
 #### Sanity: 
