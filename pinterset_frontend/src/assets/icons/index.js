@@ -163,3 +163,16 @@ export const EditIcon = ({ className }) => (
         <path d="m13.386 6.018 4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596l-2.298 2.3-4.596-4.598 2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
     </svg>
 );
+export const ArrowLeftIcon = ({ className }) => (
+    <svg
+        className={className}
+        height="20"
+        width="20"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        aria-label=""
+        role="img"
+    >
+        <path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path>
+    </svg>
+);

@@ -8,6 +8,7 @@ import MasonryLayout from "./MasonryLayout";
 import Spinner from "./Spinner";
 import { domains, pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 import {
+    ArrowLeftIcon,
     ArrowUpRightIcon,
     DeleteIcon,
     HeartIcon,
@@ -109,6 +110,11 @@ const PinDetail = ({ user }) => {
     useEffect(() => {
         fetchPinDetail();
     }, [pinId]);
+    useEffect(() => {
+        if (pinDetail?._id) {
+            console.log(window.scrollY);
+        }
+    }, [pinDetail?._id]);
 
     if (!pinDetail) return <Spinner />;
 
@@ -124,7 +130,16 @@ const PinDetail = ({ user }) => {
     };
 
     return (
-        <div className="mt-8 px-2 md:px-4">
+        <div className="mt-8 md:mt-12 px-4 md:px-12">
+            <div className="hidden sm:flex">
+                <button
+                    type="button"
+                    className="absolute z-[21] top-24 left-4 p-3 rounded-full bg-white text-xl cursor-pointer outline-none hover:shadow-md transition-all duration-300 ease-in-out hover:bg-[#0000000f]"
+                    onClick={() => navigate(-1)}
+                >
+                    <ArrowLeftIcon />
+                </button>
+            </div>
             <div
                 className="flex flex-col min-[950px]:flex-row m-auto mb-4 bg-white shadow-[0_1px_20px_0_rgba(0,0,0,0.15)] min-[950px]:max-w-[1100px] max-w-[508px] min-h-[300px]"
                 style={{ borderRadius: "32px" }}

@@ -20,6 +20,7 @@ const Pin = ({ pin }) => {
     const user = fetchUser();
     const menuRef = useRef();
     const optionRef = useRef();
+    const imageRef = useRef();
     const [isOpenEdit, setIsOpenEdit] = useRecoilState(modalEditState);
     const [pinData, setPinData] = useRecoilState(pinState);
 
@@ -66,7 +67,6 @@ const Pin = ({ pin }) => {
                 ])
                 .commit()
                 .then(() => {
-                    // window.location.reload();
                     setSavingPost(false);
                 });
         }
@@ -90,16 +90,21 @@ const Pin = ({ pin }) => {
                 onMouseLeave={() => {
                     if (!postOptions) setPostHovered(false);
                 }}
-                onClick={() => navigate(`/pin-detail/${pin?._id}`)}
+                onClick={() => {
+                    navigate(`/pin-detail/${pin?._id}`);
+                    window.location.reload();
+                }}
             >
                 <img
+                    ref={imageRef}
                     className="w-full rounded-[16px]"
                     alt="user-post"
                     src={urlFor(pin.image).width(2500).url()}
+                    loading="lazy"
                 />
                 {postHovered && (
                     <div
-                        className="absolute top-0 w-full h-full flex flex-col justify-between p-3 z-50"
+                        className="absolute top-0 w-full h-full flex flex-col justify-between p-3 z-50 animate-hover"
                         style={{
                             height: "100%",
                             backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -123,7 +128,7 @@ const Pin = ({ pin }) => {
                                         savePin(pin?._id);
                                     }}
                                     type="button"
-                                    className="bg-[#e60023]  hover:bg-[#ad081b] text-white font-bold px-4 py-3 text-base  rounded-3xl hover:shadow-md outline-none"
+                                    className="bg-[#e60023] hover:bg-[#ad081b] text-white font-bold px-4 py-3 text-base  rounded-3xl hover:shadow-md outline-none transition-all duration-200 ease-in-out"
                                 >
                                     {/* {savingPost ? "Saving" : "Save"} */}
                                     Save
@@ -136,14 +141,16 @@ const Pin = ({ pin }) => {
                                 {pin?.destination && (
                                     <a
                                         href={pin?.destination}
-                                        className="bg-white flex items-center gap-2 text-[#111] text-[14px] font-semibold w-full h-8 rounded-full opacity-80 hover:opacity-90 hover:shadow-md outline-none py-2 px-3 overflow-hidden"
+                                        className="bg-white flex items-center gap-2 text-[#111] text-[14px] font-semibold w-full h-8 rounded-full opacity-80 hover:opacity-90 hover:shadow-md outline-none py-2 px-3 overflow-hidden transition-all duration-200 ease-in-out"
                                         target="_blank"
                                         rel="noreferrer"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                         }}
                                     >
-                                        <ArrowUpRightIcon className="w-[9px] h-[9px]" />
+                                        <div className="">
+                                            <ArrowUpRightIcon className="w-[9px] h-[9px]" />
+                                        </div>
                                         {pin?.destination && (
                                             <p className="overflow-hidden text-ellipsis	whitespace-nowrap">
                                                 {pin?.destination?.includes(
@@ -171,7 +178,7 @@ const Pin = ({ pin }) => {
                                             setIsOpenEdit(true);
                                             setPinData(pin);
                                         }}
-                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
+                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none transition-all duration-200 ease-in-out"
                                     >
                                         <EditIcon />
                                     </button>
@@ -180,7 +187,7 @@ const Pin = ({ pin }) => {
                                         href={`${pin.image?.asset?.url}?dl=`}
                                         download
                                         onClick={(e) => e.stopPropagation()}
-                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
+                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none transition-all duration-200 ease-in-out"
                                     >
                                         <MdOutlineFileDownload
                                             fontSize={21}
@@ -188,17 +195,19 @@ const Pin = ({ pin }) => {
                                         />
                                     </a>
                                 )}
-                                <button
-                                    ref={menuRef}
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setPostOptions(!postOptions);
-                                    }}
-                                    className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none"
-                                >
-                                    <MenuIcon />
-                                </button>
+                                {pin?.postedBy && (
+                                    <button
+                                        ref={menuRef}
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setPostOptions(!postOptions);
+                                        }}
+                                        className="bg-white w-8 h-8 rounded-full flex items-center justify-center text-[#111] text-xl opacity-80 hover:opacity-90 hover:shadow-md outline-none transition-all duration-200 ease-in-out"
+                                    >
+                                        <MenuIcon />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -233,11 +242,13 @@ const Pin = ({ pin }) => {
             {postOptions && (
                 <div
                     ref={optionRef}
-                    className={`absolute min-h-[40px] min-w-[180px] max-w-[360px] max-h-[90vh] right-[-15px] shadow-[0px_0px_8px_rgba(0,0,0,0.1)] outline-none rounded-[16px] bg-white z-[60] ${
-                        pin?.postedBy?._id === user?.sub
-                            ? "bottom-[-108px]"
-                            : "bottom-[-68px]"
-                    }`}
+                    className={`absolute min-h-[40px] min-w-[180px] max-w-[360px] max-h-[90vh] right-[-15px] shadow-[0px_0px_8px_rgba(0,0,0,0.1)] outline-none rounded-[16px] bg-white z-[60] 
+                        ${
+                            pin?.postedBy?._id === user?.sub
+                                ? "bottom-[-118px]"
+                                : "bottom-[-75px]"
+                        }
+                    `}
                 >
                     <div className="bg-white relative overflow-auto m-2">
                         <div className="w-full cursor-pointer flex flex-col gap-2 ">
